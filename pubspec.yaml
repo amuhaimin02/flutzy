@@ -1,0 +1,22 @@
+name: flutzy
+description: Yatzy-based dice game.
+
+version: 1.0.0
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  sliding_up_panel: ^0.3.6
+  material_design_icons_flutter: ^3.4.4795
+  provider: ^4.0.1
+  
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
