@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutzy/src/widgets/constants.dart';
 import 'package:flutzy/src/widgets/ticking_number.dart';
 
 class TotalScoreIndicator extends StatelessWidget {
@@ -88,8 +89,7 @@ class TotalScoreIndicator extends StatelessWidget {
           SizedBox(height: 4),
           TickingNumber(
             420,
-            duration: Duration(milliseconds: 600),
-            curve: Curves.easeOut,
+            duration: tickingNumberDuration,
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w700,

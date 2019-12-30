@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutzy/src/models/game_scene.dart';
 import 'package:flutzy/src/models/score_type.dart';
 import 'package:flutzy/src/widgets/score_tile.dart';
-import 'package:provider/provider.dart';
+import 'package:flutzy/src/widgets/section_bonus_tile.dart';
 
 class ScorePanelList extends StatelessWidget {
   final void Function(ScoreType) onTap;
+  final GameScene scene;
 
-  const ScorePanelList({Key key, this.onTap}) : super(key: key);
+  const ScorePanelList({Key key, this.onTap, this.scene}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +53,6 @@ class ScorePanelList extends StatelessWidget {
   }
 
   Widget _scoreTile(BuildContext context, ScoreType type) {
-    final scene = Provider.of<GameScene>(context);
     return ScorePanelTile(
       type: type,
       enabled: !scene.moveList.contains(type),
@@ -61,12 +61,9 @@ class ScorePanelList extends StatelessWidget {
   }
 
   Widget _bonusSectionTile(BuildContext context) {
-    return Container(
-      color: Colors.yellow.shade200,
-      child: ListTile(
-        title: Text('Bonus:'),
-        trailing: Text('12/63'),
-      ),
+    return SectionBonusTile(
+      currentScore: scene.totalScore,
+      maxScore: 63,
     );
   }
 

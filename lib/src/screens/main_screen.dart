@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutzy/src/models/game_scene.dart';
 import 'package:flutzy/src/models/score_type.dart';
 import 'package:flutzy/src/widgets/score_list.dart';
+import 'package:flutzy/src/widgets/score_tile.dart';
+import 'package:flutzy/src/widgets/swipe_detector.dart';
 import 'package:flutzy/src/widgets/total_score_indicator.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
@@ -35,13 +37,19 @@ class _FlutzyMainScreenState extends State<FlutzyMainScreen> {
             // TODO: This should not be calculated like this.
             // Figure out how to retrieve score list's height to put in here.
             minHeight: scoreIndicatorHeight,
-            maxHeight: scoreIndicatorHeight + 7 * 57.0 + 56,
+            maxHeight: scoreIndicatorHeight + 7 * (scoreTileHeight + 1) + 56,
             body: Container(
               padding: EdgeInsets.only(
                 top: statusBarHeight,
                 bottom: scoreIndicatorHeight,
               ),
-              child: YatzyPlayTable(),
+              child: SwipeDetector(
+                onSwipeUp: _openScorePanel,
+                onSwipeDown: () {},
+                child: YatzyPlayTable(
+                  onScoreInPressed: _openScorePanel,
+                ),
+              ),
             ),
             panel: FlutzyScoreBoard(
               onHeaderTap: _togglePanelSliding,
@@ -70,6 +78,10 @@ class _FlutzyMainScreenState extends State<FlutzyMainScreen> {
     }
   }
 
+  void _openScorePanel() {
+    _panel.open();
+  }
+
   void _closeScorePanel() {
     _panel.close();
   }
@@ -84,14 +96,16 @@ class FlutzyScoreBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scene = Provider.of<GameScene>(context);
     return Material(
       child: Column(
         children: [
           _topBar(context),
           ScorePanelList(
+            scene: scene,
             onTap: (type) => _onScoreSelected(context, type),
           ),
-          _confirmButtonBar()
+          _confirmButtonBar(context),
         ],
       ),
     );
@@ -113,9 +127,11 @@ class FlutzyScoreBoard extends StatelessWidget {
     );
   }
 
-  Widget _confirmButtonBar() {
+  Widget _confirmButtonBar(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Provider.of<GameScene>(context, listen: false).restart();
+      },
       child: Container(
         height: 56,
         width: double.infinity,
@@ -126,28 +142,33 @@ class FlutzyScoreBoard extends StatelessWidget {
     );
   }
 
-  void _onScoreSelected(BuildContext context, ScoreType type) {
+  void _onScoreSelected(BuildContext context, ScoreType type) async {
+    final scene = Provider.of<GameScene>(context, listen: false);
     HapticFeedback.mediumImpact();
     print(type);
-    Provider.of<GameScene>(context, listen: false)
-      ..increment()
-      ..scoreIn(type);
-    Future.delayed(Duration(milliseconds: 800), onDonePick);
+    scene..scoreIn(type);
+    await Future.delayed(Duration(milliseconds: 800));
+    onDonePick();
+    scene.nextTurn();
   }
 }
 
 class YatzyPlayTable extends StatelessWidget {
+  // Instead of passing data like this, consider to
+  // use other suitable method (Provider?)
+  final VoidCallback onScoreInPressed;
+
+  const YatzyPlayTable({Key key, this.onScoreInPressed}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: 200,
-            height: 200,
-            color: Colors.white54,
-          ),
+          _messagePanel(context),
+          SizedBox(height: 8),
+          _dicePool(context),
           SizedBox(height: 40),
           _buildRollButton(context),
           SizedBox(height: 8),
@@ -157,12 +178,38 @@ class YatzyPlayTable extends StatelessWidget {
     );
   }
 
+  Widget _messagePanel(BuildContext context) {
+    return Selector<GameScene, int>(
+      selector: (_, scene) => scene.round,
+      builder: (_, round, __) {
+        return Text('Round: $round');
+      },
+    );
+  }
+
+  Widget _dicePool(BuildContext context) {
+    return Container(
+      width: 200,
+      height: 150,
+      color: Colors.white54,
+      alignment: Alignment.center,
+      child: Selector<GameScene, List<int>>(
+        selector: (_, scene) => scene.dicePool.content,
+        builder: (_, pool, __) {
+          return Text(
+            pool?.toString() ?? 'Dice not rolled yet',
+          );
+        },
+      ),
+    );
+  }
+
   Widget _buildRollButton(BuildContext context) {
     return RaisedButton.icon(
       icon: Icon(MdiIcons.diceMultipleOutline),
       label: Text('Roll'),
       onPressed: () {
-        Provider.of<GameScene>(context, listen: false).reset();
+        Provider.of<GameScene>(context, listen: false).roll();
       },
     );
   }
@@ -170,7 +217,7 @@ class YatzyPlayTable extends StatelessWidget {
   Widget _buildScoreInButton(BuildContext context) {
     return FlatButton(
       child: Text('Score in'),
-      onPressed: () {},
+      onPressed: onScoreInPressed,
     );
   }
 }

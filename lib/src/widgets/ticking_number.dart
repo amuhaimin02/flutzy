@@ -23,7 +23,7 @@ class _AnimatedCountState extends AnimatedWidgetBaseState<TickingNumber> {
 
   @override
   Widget build(BuildContext context) {
-    return new Text(
+    return Text(
       _number.evaluate(animation).toString(),
       style: widget.style,
     );
