@@ -20,3 +20,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
+  fonts:
+    - family: RobotoCondensed
+      fonts:
+        - asset: assets/RobotoCondensed-Regular.ttf

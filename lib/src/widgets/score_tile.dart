@@ -5,20 +5,32 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 class ScorePanelTile extends StatelessWidget {
   final VoidCallback onTap;
   final ScoreType type;
+  final enabled;
 
   const ScorePanelTile({
     Key key,
     this.type,
+    this.enabled = true,
     this.onTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final data = scorePanelDataOf[type];
-    return ListTile(
-      leading: Icon(data.icon),
-      title: Text(data.name),
-      onTap: onTap,
+
+    return Container(
+      color: enabled ? Colors.transparent : Colors.black12,
+      child: ListTile(
+        leading: Icon(data.icon),
+        enabled: enabled,
+        title: Text(
+          data.name,
+          style: TextStyle(
+            fontFamily: 'RobotoCondensed',
+          ),
+        ),
+        onTap: onTap,
+      ),
     );
   }
 }

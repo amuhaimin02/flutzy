@@ -48,6 +48,8 @@ class TotalScoreIndicator extends StatelessWidget {
           ),
           TickingNumber(
             score,
+            duration: Duration(milliseconds: 600),
+            curve: Curves.easeOut,
             style: TextStyle(
               fontSize: 40,
               fontWeight: FontWeight.w900,
@@ -86,6 +88,8 @@ class TotalScoreIndicator extends StatelessWidget {
           SizedBox(height: 4),
           TickingNumber(
             420,
+            duration: Duration(milliseconds: 600),
+            curve: Curves.easeOut,
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w700,

@@ -5,11 +5,13 @@ class TickingNumber extends ImplicitlyAnimatedWidget {
   final int number;
   final TextStyle style;
 
-  TickingNumber(this.number, {Key key, this.style})
-      : super(
-            key: key,
-            duration: Duration(milliseconds: 500),
-            curve: Curves.easeOutCubic);
+  TickingNumber(
+    this.number, {
+    Key key,
+    this.style,
+    @required Duration duration,
+    Curve curve = Curves.linear,
+  }) : super(key: key, duration: duration, curve: curve);
 
   @override
   ImplicitlyAnimatedWidgetState<ImplicitlyAnimatedWidget> createState() =>

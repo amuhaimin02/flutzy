@@ -24,15 +24,18 @@ class _FlutzyMainScreenState extends State<FlutzyMainScreen> {
     final statusBarHeight = MediaQuery.of(context).padding.top;
     return ChangeNotifierProvider(
       create: (context) => GameScene(),
+      // Allow back button to be used to dismiss the panel
+      // instead of going out of the app
       child: WillPopScope(
         onWillPop: _onBackPress,
         child: Scaffold(
           body: SlidingUpPanel(
             controller: _panel,
             backdropEnabled: true,
-            // TODO: Change this hard coded values
+            // TODO: This should not be calculated like this.
+            // Figure out how to retrieve score list's height to put in here.
             minHeight: scoreIndicatorHeight,
-            maxHeight: scoreIndicatorHeight + 7 * 56.0 + 56,
+            maxHeight: scoreIndicatorHeight + 7 * 57.0 + 56,
             body: Container(
               padding: EdgeInsets.only(
                 top: statusBarHeight,
@@ -84,33 +87,41 @@ class FlutzyScoreBoard extends StatelessWidget {
     return Material(
       child: Column(
         children: [
-          Container(
-            width: double.infinity,
-            height: scoreIndicatorHeight,
-            color: Theme.of(context).bottomAppBarColor,
-            child: Consumer<GameScene>(
-              builder: (context, scene, child) {
-                return TotalScoreIndicator(
-                  score: scene.totalScore,
-                  onTap: onHeaderTap,
-                );
-              },
-            ),
-          ),
+          _topBar(context),
           ScorePanelList(
             onTap: (type) => _onScoreSelected(context, type),
           ),
-          InkWell(
-            onTap: () {},
-            child: Container(
-              height: 56,
-              width: double.infinity,
-              color: Colors.black12,
-              alignment: Alignment.center,
-              child: Text('Confirm'),
-            ),
-          )
+          _confirmButtonBar()
         ],
+      ),
+    );
+  }
+
+  Widget _topBar(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: scoreIndicatorHeight,
+      color: Theme.of(context).bottomAppBarColor,
+      child: Consumer<GameScene>(
+        builder: (context, scene, child) {
+          return TotalScoreIndicator(
+            score: scene.totalScore,
+            onTap: onHeaderTap,
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _confirmButtonBar() {
+    return InkWell(
+      onTap: () {},
+      child: Container(
+        height: 56,
+        width: double.infinity,
+        color: Colors.black12,
+        alignment: Alignment.center,
+        child: Text('Confirm'),
       ),
     );
   }
@@ -118,8 +129,10 @@ class FlutzyScoreBoard extends StatelessWidget {
   void _onScoreSelected(BuildContext context, ScoreType type) {
     HapticFeedback.mediumImpact();
     print(type);
-    Provider.of<GameScene>(context, listen: false).increment();
-    Future.delayed(Duration(seconds: 1), onDonePick);
+    Provider.of<GameScene>(context, listen: false)
+      ..increment()
+      ..scoreIn(type);
+    Future.delayed(Duration(milliseconds: 800), onDonePick);
   }
 }
 
