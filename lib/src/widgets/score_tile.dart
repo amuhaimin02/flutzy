@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutzy/src/models/score_type.dart';
-import 'package:flutzy/src/widgets/strikable_text.dart';
+import 'package:flutzy/src/widgets/blinking.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-
+import 'constants.dart';
 
 class ScorePanelTile extends StatelessWidget {
   final VoidCallback onTap;
   final ScoreType type;
-  final enabled;
+  final bool enabled;
+  final int score;
+  final int hintScore;
 
   const ScorePanelTile({
     Key key,
     this.type,
     this.enabled = true,
     this.onTap,
+    this.score,
+    this.hintScore,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final data = scorePanelDataOf[type];
-
     return InkWell(
       onTap: enabled ? onTap : null,
       child: Container(
@@ -30,21 +32,67 @@ class ScorePanelTile extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(data.icon, color: enabled ? Colors.black54 : Colors.black38),
-            AnimatedStrikableText(
-              data.name,
-              strike: !enabled,
-              style: TextStyle(
-                fontFamily: 'RobotoCondensed',
-                color: enabled ? Colors.black87 : Colors.black38,
-              ),
-              lineColor: Theme.of(context).errorColor.withOpacity(0.54),
-              thickness: 2,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _scoreLabel(context),
+                _scoreValue(context),
+              ],
             ),
+            _trailingPart(context),
           ],
         ),
       ),
     );
+  }
+
+  Widget _scoreLabel(BuildContext context) {
+    final data = scorePanelDataOf[type];
+//    return AnimatedStrikableText(
+//      data.name,
+//      strike: !enabled,
+//      style: TextStyle(
+//        fontFamily: 'RobotoCondensed',
+//        color: enabled ? Colors.black87 : Colors.black38,
+//      ),
+//      lineColor: Theme.of(context).errorColor.withOpacity(0.54),
+//      thickness: 2,
+//    );
+    return Text(
+      data.name,
+      style: TextStyle(
+        fontFamily: 'RobotoCondensed',
+        color: enabled ? Colors.black87 : Colors.black38,
+      ),
+    );
+  }
+
+  Widget _scoreValue(BuildContext context) {
+    final textStyle = Theme.of(context).textTheme.body2;
+    if (enabled && hintScore != null) {
+      if (hintScore == 0) {
+        return Text('+ 0', style: textStyle.copyWith(color: Colors.black38));
+      } else {
+        return Blinking(
+          child: Text('+ $hintScore',
+              style: textStyle.copyWith(
+                  color: Colors.green, fontWeight: FontWeight.bold)),
+        );
+      }
+    } else {
+      return SizedBox.shrink();
+    }
+  }
+
+  Widget _trailingPart(BuildContext context) {
+    final data = scorePanelDataOf[type];
+    if (score != null) {
+      return Text('$score ',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black38));
+    } else {
+      return Icon(data.icon, color: enabled ? Colors.black54 : Colors.black38);
+    }
   }
 }
 
@@ -56,7 +104,7 @@ class ScorePanelData {
   const ScorePanelData({this.name, this.icon});
 }
 
-const scorePanelDataOf = {
+final scorePanelDataOf = {
   ScoreType.ones: ScorePanelData(name: 'Ones', icon: MdiIcons.dice1Outline),
   ScoreType.twos: ScorePanelData(name: 'Twos', icon: MdiIcons.dice2Outline),
   ScoreType.threes: ScorePanelData(name: 'Threes', icon: MdiIcons.dice3Outline),

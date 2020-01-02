@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutzy/src/models/dice.dart';
 import 'package:flutzy/src/models/game_scene.dart';
 import 'package:flutzy/src/models/score_type.dart';
+import 'package:flutzy/src/widgets/constants.dart';
 import 'package:flutzy/src/widgets/score_list.dart';
-import 'package:flutzy/src/widgets/score_tile.dart';
 import 'package:flutzy/src/widgets/swipe_detector.dart';
 import 'package:flutzy/src/widgets/total_score_indicator.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -31,6 +32,8 @@ class _FlutzyMainScreenState extends State<FlutzyMainScreen> {
       child: WillPopScope(
         onWillPop: _onBackPress,
         child: Scaffold(
+          extendBodyBehindAppBar: true,
+          appBar: _appBar(),
           body: SlidingUpPanel(
             controller: _panel,
             backdropEnabled: true,
@@ -61,6 +64,26 @@ class _FlutzyMainScreenState extends State<FlutzyMainScreen> {
     );
   }
 
+  Widget _appBar() {
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      iconTheme: IconThemeData(
+        color: Colors.black87,
+      ),
+      actions: [
+        Builder(
+          builder: (context) => IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () {
+              Provider.of<GameScene>(context, listen: false).restart();
+            },
+          ),
+        )
+      ],
+    );
+  }
+
   Future<bool> _onBackPress() async {
     if (_panel.isPanelOpen()) {
       _panel.close();
@@ -87,7 +110,7 @@ class _FlutzyMainScreenState extends State<FlutzyMainScreen> {
   }
 }
 
-class FlutzyScoreBoard extends StatelessWidget {
+class FlutzyScoreBoard extends StatefulWidget {
   final VoidCallback onHeaderTap;
   final VoidCallback onDonePick;
 
@@ -95,18 +118,25 @@ class FlutzyScoreBoard extends StatelessWidget {
       : super(key: key);
 
   @override
+  _FlutzyScoreBoardState createState() => _FlutzyScoreBoardState();
+}
+
+class _FlutzyScoreBoardState extends State<FlutzyScoreBoard> {
+  // TODO: Might change this
+  bool _disableScoreTileClicks = false;
+
+  @override
   Widget build(BuildContext context) {
-    final scene = Provider.of<GameScene>(context);
-    return Material(
-      child: Column(
-        children: [
-          _topBar(context),
-          ScorePanelList(
-            scene: scene,
-            onTap: (type) => _onScoreSelected(context, type),
-          ),
-          _confirmButtonBar(context),
-        ],
+    return AbsorbPointer(
+      absorbing: _disableScoreTileClicks,
+      child: Material(
+        child: Column(
+          children: [
+            _topBar(context),
+            _scoreList(context),
+            _confirmButtonBar(context),
+          ],
+        ),
       ),
     );
   }
@@ -120,18 +150,24 @@ class FlutzyScoreBoard extends StatelessWidget {
         builder: (context, scene, child) {
           return TotalScoreIndicator(
             score: scene.totalScore,
-            onTap: onHeaderTap,
+            onTap: widget.onHeaderTap,
           );
         },
       ),
     );
   }
 
+  Widget _scoreList(BuildContext context) {
+    final scene = Provider.of<GameScene>(context);
+    return ScorePanelList(
+      scene: scene,
+      onTap: (type) => _onScoreSelected(context, type),
+    );
+  }
+
   Widget _confirmButtonBar(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Provider.of<GameScene>(context, listen: false).restart();
-      },
+      onTap: () {},
       child: Container(
         height: 56,
         width: double.infinity,
@@ -147,9 +183,12 @@ class FlutzyScoreBoard extends StatelessWidget {
     HapticFeedback.mediumImpact();
     print(type);
     scene..scoreIn(type);
-    await Future.delayed(Duration(milliseconds: 800));
-    onDonePick();
+    setState(() => _disableScoreTileClicks = true);
+    await Future.delayed(autoSlideDownDuration);
+    widget.onDonePick();
+//    await Future.delayed(Duration(milliseconds: 400));
     scene.nextTurn();
+    setState(() => _disableScoreTileClicks = false);
   }
 }
 
@@ -166,9 +205,7 @@ class YatzyPlayTable extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _messagePanel(context),
-          SizedBox(height: 8),
-          _dicePool(context),
+          _diceDisplay(context),
           SizedBox(height: 40),
           _buildRollButton(context),
           SizedBox(height: 8),
@@ -178,22 +215,13 @@ class YatzyPlayTable extends StatelessWidget {
     );
   }
 
-  Widget _messagePanel(BuildContext context) {
-    return Selector<GameScene, int>(
-      selector: (_, scene) => scene.round,
-      builder: (_, round, __) {
-        return Text('Round: $round');
-      },
-    );
-  }
-
-  Widget _dicePool(BuildContext context) {
+  Widget _diceDisplay(BuildContext context) {
     return Container(
       width: 200,
       height: 150,
       color: Colors.white54,
       alignment: Alignment.center,
-      child: Selector<GameScene, List<int>>(
+      child: Selector<GameScene, List<Dice>>(
         selector: (_, scene) => scene.dicePool.content,
         builder: (_, pool, __) {
           return Text(
@@ -205,19 +233,26 @@ class YatzyPlayTable extends StatelessWidget {
   }
 
   Widget _buildRollButton(BuildContext context) {
+    final scene = Provider.of<GameScene>(context);
     return RaisedButton.icon(
       icon: Icon(MdiIcons.diceMultipleOutline),
-      label: Text('Roll'),
-      onPressed: () {
-        Provider.of<GameScene>(context, listen: false).roll();
-      },
+      label: Text('Roll (${scene.tries}/${scene.maxTries})'),
+      onPressed: scene.canRoll ? () => scene.roll() : null,
     );
   }
 
   Widget _buildScoreInButton(BuildContext context) {
-    return FlatButton(
-      child: Text('Score in'),
-      onPressed: onScoreInPressed,
+    return Consumer<GameScene>(
+      builder: (_, scene, __) {
+        return AnimatedOpacity(
+          opacity: scene.hasRolled ? 1 : 0,
+          duration: Duration(milliseconds: 500),
+          child: FlatButton(
+            child: Text('Score in'),
+            onPressed: scene.hasRolled ? onScoreInPressed : null,
+          ),
+        );
+      },
     );
   }
 }

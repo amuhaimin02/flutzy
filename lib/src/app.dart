@@ -23,7 +23,7 @@ class FlutzyApp extends StatelessWidget {
       buttonTheme: ButtonThemeData(
         textTheme: ButtonTextTheme.primary,
         height: 48,
-        minWidth: 200,
+        minWidth: 240,
       ),
       textTheme: Typography.englishLike2018,
       splashFactory: InkRipple.splashFactory,
@@ -43,12 +43,12 @@ var colorPalette = [
   Colors.teal,
   Colors.green,
   Colors.lightGreen,
-  Colors.lime,
-  Colors.yellow,
-  Colors.amber,
+//  Colors.lime,
+//  Colors.yellow,
+//  Colors.amber,
   Colors.orange,
   Colors.deepOrange,
   Colors.brown,
-  Colors.grey,
+//  Colors.grey,
   Colors.blueGrey
 ];

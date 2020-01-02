@@ -53,9 +53,15 @@ class ScorePanelList extends StatelessWidget {
   }
 
   Widget _scoreTile(BuildContext context, ScoreType type) {
+    final hasRolled = scene.hasRolled;
+    final move = scene.moveList
+        .firstWhere((move) => move.type == type, orElse: () => null);
+
     return ScorePanelTile(
       type: type,
-      enabled: !scene.moveList.contains(type),
+      enabled: move == null,
+      score: move?.score,
+      hintScore: hasRolled ? type.score(scene.dicePool.content) : null,
       onTap: () => _onTileSelected(type),
     );
   }

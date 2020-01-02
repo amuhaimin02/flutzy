@@ -2,21 +2,27 @@ import 'dart:math';
 
 import 'package:meta/meta.dart';
 
+import 'dice.dart';
+
 class DicePool {
   /// Random number generator used for the game
   final _random = Random();
 
-  final int count;
-  List<int> content;
+  final int size;
 
-  DicePool({@required this.count});
+  List<Dice> _content;
 
-  List<int> roll() {
-    return content =
-        List.generate(count, (_) => _random.nextInt(6) + 1, growable: false);
+  List<Dice> get content => _content;
+
+  DicePool({@required this.size});
+
+  List<Dice> roll() {
+    return _content = List.generate(
+        size, (_) => Dice.values[_random.nextInt(6)],
+        growable: false);
   }
 
   void clear() {
-    content = null;
+    _content = null;
   }
 }

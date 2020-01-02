@@ -1,6 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutzy/src/widgets/constants.dart';
-import 'package:flutzy/src/widgets/score_tile.dart';
 import 'package:flutzy/src/widgets/ticking_number.dart';
 
 class SectionBonusTile extends StatelessWidget {
@@ -16,7 +16,7 @@ class SectionBonusTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.yellow.shade200,
+      color: Theme.of(context).primaryColor.withOpacity(0.1),
       padding: EdgeInsets.symmetric(horizontal: 16),
       height: scoreTileHeight,
       child: Row(
@@ -30,6 +30,10 @@ class SectionBonusTile extends StatelessWidget {
           TickingNumber(
             currentScore,
             duration: tickingNumberDuration,
+            style: TextStyle(
+              color: Theme.of(context).primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           Text('/$maxScore'),
         ],
