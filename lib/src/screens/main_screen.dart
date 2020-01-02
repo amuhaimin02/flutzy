@@ -14,51 +14,68 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 const scoreIndicatorHeight = 120.0;
 
-class FlutzyMainScreen extends StatefulWidget {
+class FlutzyMainScreen extends StatelessWidget {
   @override
-  _FlutzyMainScreenState createState() => _FlutzyMainScreenState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => GameScene(),
+      child: FlutzyScreenContent(),
+    );
+  }
 }
 
-class _FlutzyMainScreenState extends State<FlutzyMainScreen> {
+class FlutzyScreenContent extends StatefulWidget {
+  @override
+  _FlutzyScreenContentState createState() => _FlutzyScreenContentState();
+}
+
+class _FlutzyScreenContentState extends State<FlutzyScreenContent> {
   final _panel = PanelController();
 
   @override
   Widget build(BuildContext context) {
+    return Selector<GameScene, bool>(
+      selector: (_, scene) => scene.turnEnded,
+      builder: (_, turnEnded, __) {
+        return WillPopScope(
+          onWillPop: _onBackPress,
+          child: IgnorePointer(
+            ignoring: turnEnded,
+            child: _screenScaffold(),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _screenScaffold() {
     final statusBarHeight = MediaQuery.of(context).padding.top;
-    return ChangeNotifierProvider(
-      create: (context) => GameScene(),
-      // Allow back button to be used to dismiss the panel
-      // instead of going out of the app
-      child: WillPopScope(
-        onWillPop: _onBackPress,
-        child: Scaffold(
-          extendBodyBehindAppBar: true,
-          appBar: _appBar(),
-          body: SlidingUpPanel(
-            controller: _panel,
-            backdropEnabled: true,
-            // TODO: This should not be calculated like this.
-            // Figure out how to retrieve score list's height to put in here.
-            minHeight: scoreIndicatorHeight,
-            maxHeight: scoreIndicatorHeight + 7 * (scoreTileHeight + 1) + 56,
-            body: Container(
-              padding: EdgeInsets.only(
-                top: statusBarHeight,
-                bottom: scoreIndicatorHeight,
-              ),
-              child: SwipeDetector(
-                onSwipeUp: _openScorePanel,
-                onSwipeDown: () {},
-                child: YatzyPlayTable(
-                  onScoreInPressed: _openScorePanel,
-                ),
-              ),
-            ),
-            panel: FlutzyScoreBoard(
-              onHeaderTap: _togglePanelSliding,
-              onDonePick: _closeScorePanel,
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: _appBar(),
+      body: SlidingUpPanel(
+        controller: _panel,
+        backdropEnabled: true,
+        // TODO: This should not be calculated like this.
+        // Figure out how to retrieve score list's height to put in here.
+        minHeight: scoreIndicatorHeight,
+        maxHeight: scoreIndicatorHeight + 7 * (scoreTileHeight + 1) + 56,
+        body: Container(
+          padding: EdgeInsets.only(
+            top: statusBarHeight,
+            bottom: scoreIndicatorHeight,
+          ),
+          child: SwipeDetector(
+            onSwipeUp: _openScorePanel,
+            onSwipeDown: () {},
+            child: YatzyPlayTable(
+              onScoreInPressed: _openScorePanel,
             ),
           ),
+        ),
+        panel: FlutzyScoreBoard(
+          onHeaderTap: _togglePanelSliding,
+          onDonePick: _closeScorePanel,
         ),
       ),
     );
@@ -72,14 +89,12 @@ class _FlutzyMainScreenState extends State<FlutzyMainScreen> {
         color: Colors.black87,
       ),
       actions: [
-        Builder(
-          builder: (context) => IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () {
-              Provider.of<GameScene>(context, listen: false).restart();
-            },
-          ),
-        )
+        IconButton(
+          icon: Icon(Icons.delete),
+          onPressed: () {
+            Provider.of<GameScene>(context, listen: false).restart();
+          },
+        ),
       ],
     );
   }
@@ -122,21 +137,15 @@ class FlutzyScoreBoard extends StatefulWidget {
 }
 
 class _FlutzyScoreBoardState extends State<FlutzyScoreBoard> {
-  // TODO: Might change this
-  bool _disableScoreTileClicks = false;
-
   @override
   Widget build(BuildContext context) {
-    return AbsorbPointer(
-      absorbing: _disableScoreTileClicks,
-      child: Material(
-        child: Column(
-          children: [
-            _topBar(context),
-            _scoreList(context),
-            _confirmButtonBar(context),
-          ],
-        ),
+    return Material(
+      child: Column(
+        children: [
+          _topBar(context),
+          _scoreList(context),
+          _confirmButtonBar(context),
+        ],
       ),
     );
   }
@@ -181,14 +190,11 @@ class _FlutzyScoreBoardState extends State<FlutzyScoreBoard> {
   void _onScoreSelected(BuildContext context, ScoreType type) async {
     final scene = Provider.of<GameScene>(context, listen: false);
     HapticFeedback.mediumImpact();
-    print(type);
-    scene..scoreIn(type);
-    setState(() => _disableScoreTileClicks = true);
+    scene.scoreIn(type);
     await Future.delayed(autoSlideDownDuration);
     widget.onDonePick();
-//    await Future.delayed(Duration(milliseconds: 400));
+    await Future.delayed(Duration(milliseconds: 400));
     scene.nextTurn();
-    setState(() => _disableScoreTileClicks = false);
   }
 }
 

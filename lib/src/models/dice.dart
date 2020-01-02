@@ -17,4 +17,8 @@ class Dice {
 
   @override
   toString() => '[$value]';
+
+  static List<Dice> from(List<int> integers) {
+    return integers.map((i) => values[i - 1]).toList();
+  }
 }

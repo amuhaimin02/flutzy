@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutzy/src/models/score_type.dart';
-import 'package:flutzy/src/widgets/blinking.dart';
+import 'package:flutzy/src/widgets/strikable_text.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import 'constants.dart';
@@ -49,23 +49,23 @@ class ScorePanelTile extends StatelessWidget {
 
   Widget _scoreLabel(BuildContext context) {
     final data = scorePanelDataOf[type];
-//    return AnimatedStrikableText(
-//      data.name,
-//      strike: !enabled,
-//      style: TextStyle(
-//        fontFamily: 'RobotoCondensed',
-//        color: enabled ? Colors.black87 : Colors.black38,
-//      ),
-//      lineColor: Theme.of(context).errorColor.withOpacity(0.54),
-//      thickness: 2,
-//    );
-    return Text(
+    return AnimatedStrikableText(
       data.name,
+      strike: !enabled,
       style: TextStyle(
         fontFamily: 'RobotoCondensed',
         color: enabled ? Colors.black87 : Colors.black38,
       ),
+      lineColor: Theme.of(context).errorColor.withOpacity(0.54),
+      thickness: 2,
     );
+//    return Text(
+//      data.name,
+//      style: TextStyle(
+//        fontFamily: 'RobotoCondensed',
+//        color: enabled ? Colors.black87 : Colors.black38,
+//      ),
+//    );
   }
 
   Widget _scoreValue(BuildContext context) {
@@ -74,11 +74,9 @@ class ScorePanelTile extends StatelessWidget {
       if (hintScore == 0) {
         return Text('+ 0', style: textStyle.copyWith(color: Colors.black38));
       } else {
-        return Blinking(
-          child: Text('+ $hintScore',
-              style: textStyle.copyWith(
-                  color: Colors.green, fontWeight: FontWeight.bold)),
-        );
+        return Text('+ $hintScore',
+            style: textStyle.copyWith(
+                color: Colors.green, fontWeight: FontWeight.bold));
       }
     } else {
       return SizedBox.shrink();

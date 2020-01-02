@@ -9,6 +9,10 @@ class GameScene with ChangeNotifier {
   final dicePool = DicePool(size: 5);
   final maxTries = 3;
 
+  bool _turnEnded = false;
+
+  bool get turnEnded => _turnEnded;
+
   int _round = 1;
 
   int get round => _round;
@@ -37,6 +41,7 @@ class GameScene with ChangeNotifier {
     final score = type.score(dicePool.content);
     moveList.add(Move(type, score));
     _totalScore += score;
+    _turnEnded = true;
     notifyListeners();
   }
 
@@ -44,6 +49,7 @@ class GameScene with ChangeNotifier {
     _round++;
     _tries = 0;
     dicePool.clear();
+    _turnEnded = false;
     notifyListeners();
   }
 
