@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutzy/src/widgets/constants.dart';
+import 'package:flutzy/src/utils/constants.dart';
 import 'package:flutzy/src/widgets/ticking_number.dart';
 
 class TotalScoreIndicator extends StatelessWidget {

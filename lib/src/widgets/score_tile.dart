@@ -3,7 +3,7 @@ import 'package:flutzy/src/models/score_type.dart';
 import 'package:flutzy/src/widgets/strikable_text.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-import 'constants.dart';
+import '../utils/constants.dart';
 
 class ScorePanelTile extends StatelessWidget {
   final VoidCallback onTap;

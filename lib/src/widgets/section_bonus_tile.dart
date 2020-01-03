@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutzy/src/widgets/constants.dart';
+import 'package:flutzy/src/utils/constants.dart';
 import 'package:flutzy/src/widgets/ticking_number.dart';
 
 class SectionBonusTile extends StatelessWidget {

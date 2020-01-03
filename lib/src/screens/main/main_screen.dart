@@ -1,15 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutzy/src/models/game_scene.dart';
-import 'package:flutzy/src/widgets/constants.dart';
+import 'package:flutzy/src/utils/constants.dart';
 import 'package:flutzy/src/widgets/swipe_detector.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import 'play_table.dart';
 import 'score_board.dart';
-
-const scoreIndicatorHeight = 120.0;
 
 class FlutzyMainScreen extends StatelessWidget {
   @override

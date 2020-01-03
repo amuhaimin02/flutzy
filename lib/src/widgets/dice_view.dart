@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutzy/src/models/dice.dart';
+import 'package:flutzy/src/utils/constants.dart';
 
 class DiceView extends StatelessWidget {
   final Dice dice;
@@ -14,8 +15,8 @@ class DiceView extends StatelessWidget {
       color: Colors.white,
       shadowColor: Colors.white,
       child: Container(
-        width: 72,
-        height: 72,
+        width: diceFaceSize,
+        height: diceFaceSize,
         child: dice != null
             ? Stack(
                 children: dotsPlacement[dice].map((alignment) {
@@ -64,10 +65,10 @@ class DiceDot extends StatelessWidget {
     return Material(
       elevation: 2,
       color: Colors.black54,
-      borderRadius: BorderRadius.circular(5),
+      borderRadius: BorderRadius.circular(diceDotSize),
       child: Container(
-        width: 10,
-        height: 10,
+        width: diceDotSize * 2,
+        height: diceDotSize * 2,
       ),
     );
   }
