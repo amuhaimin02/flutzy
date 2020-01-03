@@ -41,7 +41,7 @@ class _FlutzyScoreBoardState extends State<FlutzyScoreBoard> {
         builder: (context, scene, child) {
           return TotalScoreIndicator(
             score: scene.totalScore,
-            onTap: widget.onHeaderTap,
+            onTap: widget.onHeaderTap ?? () {},
           );
         },
       ),
@@ -74,7 +74,7 @@ class _FlutzyScoreBoardState extends State<FlutzyScoreBoard> {
     HapticFeedback.mediumImpact();
     scene.scoreIn(type);
     await Future.delayed(autoSlideDownDuration);
-    widget.onDonePick();
+    widget.onDonePick?.call();
     await Future.delayed(Duration(milliseconds: 400));
     scene.nextTurn();
   }

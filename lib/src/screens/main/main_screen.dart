@@ -14,17 +14,21 @@ class FlutzyMainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => GameScene(),
-      child: FlutzyScreenContent(),
+      child: OrientationBuilder(
+        builder: (context, orientation) => orientation == Orientation.portrait
+            ? FlutzyMobileScreen()
+            : FlutzyWebScreen(),
+      ),
     );
   }
 }
 
-class FlutzyScreenContent extends StatefulWidget {
+class FlutzyMobileScreen extends StatefulWidget {
   @override
-  _FlutzyScreenContentState createState() => _FlutzyScreenContentState();
+  _FlutzyMobileScreenState createState() => _FlutzyMobileScreenState();
 }
 
-class _FlutzyScreenContentState extends State<FlutzyScreenContent> {
+class _FlutzyMobileScreenState extends State<FlutzyMobileScreen> {
   final _panel = PanelController();
 
   @override
@@ -47,7 +51,7 @@ class _FlutzyScreenContentState extends State<FlutzyScreenContent> {
     final statusBarHeight = MediaQuery.of(context).padding.top;
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: _appBar(),
+      appBar: _appBar(context),
       body: SlidingUpPanel(
         controller: _panel,
         backdropEnabled: true,
@@ -76,7 +80,7 @@ class _FlutzyScreenContentState extends State<FlutzyScreenContent> {
     );
   }
 
-  Widget _appBar() {
+  Widget _appBar(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -117,5 +121,54 @@ class _FlutzyScreenContentState extends State<FlutzyScreenContent> {
 
   void _closeScorePanel() {
     _panel.close();
+  }
+}
+
+class FlutzyWebScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return _screenScaffold(context);
+  }
+
+  Widget _screenScaffold(BuildContext context) {
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: _appBar(context),
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Container(
+            width: 480,
+            child: FlutzyPlayTable(),
+          ),
+          Card(
+            child: Container(
+              // TODO: If possible I don't want to do this
+              width: 480,
+              height: scoreIndicatorHeight + 7 * (scoreTileHeight + 1) + 56,
+              child: FlutzyScoreBoard(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _appBar(BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      iconTheme: IconThemeData(
+        color: Colors.black87,
+      ),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.delete),
+          onPressed: () {
+            Provider.of<GameScene>(context, listen: false).restart();
+          },
+        ),
+      ],
+    );
   }
 }
