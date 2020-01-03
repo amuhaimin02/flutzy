@@ -75,7 +75,7 @@ class _FlutzyScoreBoardState extends State<FlutzyScoreBoard> {
     scene.scoreIn(type);
     await Future.delayed(autoSlideDownDuration);
     widget.onDonePick?.call();
-    await Future.delayed(Duration(milliseconds: 400));
+    await Future.delayed(standardFadeDuration);
     scene.nextTurn();
   }
 }

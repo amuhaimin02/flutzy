@@ -29,10 +29,10 @@ class ScoreType {
     score: (dices) => _checkForFullHouse(dices) ? 25 : 0,
   );
   static final smallStraight = ScoreType(
-    score: (dices) => _checkForSmallStraights(dices) ? 30 : 0,
+    score: (dices) => _checkForStraights(dices, _smallStraightPattern) ? 30 : 0,
   );
   static final largeStraight = ScoreType(
-    score: (dices) => _checkForLargeStraights(dices) ? 40 : 0,
+    score: (dices) => _checkForStraights(dices, _largeStraightPattern) ? 40 : 0,
   );
   static final fiveOfAKind = ScoreType(
     score: (dices) => _checkForDiceGroup(dices, 5) ? 50 : 0,
@@ -61,32 +61,26 @@ class ScoreType {
     return group.values.any((c) => c == 2) && group.values.any((c) => c == 3);
   }
 
+  static bool _checkForStraights(
+      List<Dice> dices, List<List<Dice>> patternList) {
+    final list = List<Dice>.from(dices);
+    final sorted = Set<Dice>.of(list..sort((a, b) => a.value - b.value));
+    for (var pattern in patternList) {
+      if (sorted.containsAll(pattern)) return true;
+    }
+    return false;
+  }
+
   static final _smallStraightPattern = [
     Dice.from([1, 2, 3, 4]),
     Dice.from([2, 3, 4, 5]),
     Dice.from([3, 4, 5, 6]),
   ];
 
-  static bool _checkForSmallStraights(List<Dice> dices) {
-    final sorted = Set<Dice>.of(dices..sort((a, b) => a.value - b.value));
-    for (var pattern in _smallStraightPattern) {
-      if (sorted.containsAll(pattern)) return true;
-    }
-    return false;
-  }
-
   static final _largeStraightPattern = [
     Dice.from([1, 2, 3, 4, 5]),
     Dice.from([2, 3, 4, 5, 6]),
   ];
-
-  static bool _checkForLargeStraights(List<Dice> dices) {
-    final sorted = Set<Dice>.of(dices..sort((a, b) => a.value - b.value));
-    for (var pattern in _largeStraightPattern) {
-      if (sorted.containsAll(pattern)) return true;
-    }
-    return false;
-  }
 
   static Map<Dice, int> _groupDiceByValue(List<Dice> dices) {
     return {

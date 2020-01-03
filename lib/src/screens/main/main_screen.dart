@@ -138,7 +138,7 @@ class FlutzyWebScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
-            width: 480,
+            width: 360,
             child: FlutzyPlayTable(),
           ),
           Card(

@@ -21,9 +21,10 @@ class DicePool {
   }
 
   List<Dice> roll() {
-    return _content = List.generate(
-        size, (_) => Dice.values[_random.nextInt(6)],
-        growable: false);
+    return _content = List.unmodifiable(List.generate(
+      size,
+      (_) => Dice.values[_random.nextInt(6)],
+    ));
   }
 
   void clear() {
