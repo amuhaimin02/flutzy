@@ -1,6 +1,6 @@
-# yatzy
+# Flutzy
 
-Yatzy-based dice game.
+A dice game based on Yahtzee/Yatzy, built with Flutter.
 
 ## Getting Started
 
