@@ -1,19 +1,3 @@
-//enum ScoreType {
-//  ones,
-//  twos,
-//  threes,
-//  fours,
-//  fives,
-//  sixes,
-//  threeOfAKind,
-//  fourOfAKind,
-//  fullHouse,
-//  fiveOfAKind,
-//  smallStraight,
-//  largeStraight,
-//  chance,
-//}
-
 import 'dice.dart';
 
 class ScoreType {
@@ -133,3 +117,11 @@ final lowerBoundScores = [
   ScoreType.fiveOfAKind,
   ScoreType.chance,
 ];
+
+int upperBoundScoreValue(ScoreType type) {
+  final value = upperBoundScores.indexOf(type);
+  if (value < 0)
+    return 0;
+  else
+    return value + 1;
+}

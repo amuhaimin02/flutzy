@@ -14,7 +14,11 @@ class DicePool {
 
   List<Dice> get content => _content;
 
-  DicePool({@required this.size});
+  static final emptyDicePool = List<Dice>(5);
+
+  DicePool({@required this.size}) {
+    clear();
+  }
 
   List<Dice> roll() {
     return _content = List.generate(
@@ -23,6 +27,6 @@ class DicePool {
   }
 
   void clear() {
-    _content = null;
+    _content = emptyDicePool;
   }
 }

@@ -72,7 +72,12 @@ class ScorePanelTile extends StatelessWidget {
     final textStyle = Theme.of(context).textTheme.body2;
     if (enabled && hintScore != null) {
       if (hintScore == 0) {
-        return Text('+ 0', style: textStyle.copyWith(color: Colors.black38));
+//        return Text('+ 0', style: textStyle.copyWith(color: Colors.black38));
+        return SizedBox.shrink();
+//      } else if (hintScore < upperBoundScoreValue(type) * 3) {
+//        return Text('+ $hintScore',
+//            style: textStyle.copyWith(
+//                color: Colors.deepOrange, fontWeight: FontWeight.bold));
       } else {
         return Text('+ $hintScore',
             style: textStyle.copyWith(
