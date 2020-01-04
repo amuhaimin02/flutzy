@@ -36,7 +36,8 @@ class GameScene with ChangeNotifier {
 
   bool get hasRolled => tries > 0;
 
-  bool get canRoll => _tries < maxTries;
+  bool get canRoll =>
+      _tries < maxTries && !dicePool.diceOnHold.every((d) => d == true);
 
   void roll() {
     dicePool.roll();

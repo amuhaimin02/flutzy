@@ -9,15 +9,19 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'play_table.dart';
 import 'score_board.dart';
 
+var isMobile = false;
+
 class FlutzyMainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => GameScene(),
       child: LayoutBuilder(
-        builder: (context, constraints) => constraints.maxWidth > 800
-            ? FlutzyWebScreen()
-            : FlutzyMobileScreen(),
+        builder: (context, constraints) {
+          return constraints.maxWidth > 800
+              ? FlutzyWebScreen()
+              : FlutzyMobileScreen();
+        },
       ),
     );
   }
@@ -30,6 +34,12 @@ class FlutzyMobileScreen extends StatefulWidget {
 
 class _FlutzyMobileScreenState extends State<FlutzyMobileScreen> {
   final _panel = PanelController();
+
+  @override
+  void initState() {
+    super.initState();
+    isMobile = true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,14 +77,7 @@ class _FlutzyMobileScreenState extends State<FlutzyMobileScreen> {
           child: SwipeDetector(
             onSwipeUp: _openScorePanel,
             onSwipeDown: () {},
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                FlutzyPlayTable(),
-                SizedBox(height: 8),
-                _scoreInButton(context),
-              ],
-            ),
+            child: FlutzyPlayTable(),
           ),
         ),
         panel: FlutzyScoreBoard(
@@ -126,18 +129,6 @@ class _FlutzyMobileScreenState extends State<FlutzyMobileScreen> {
 
   void _closeScorePanel() {
     _panel.close();
-  }
-
-  Widget _scoreInButton(BuildContext context) {
-    final scene = Provider.of<GameScene>(context);
-    return AnimatedOpacity(
-      opacity: scene.hasRolled ? 1 : 0,
-      duration: fastFadeDuration,
-      child: FlatButton(
-        child: Text('Score in'),
-        onPressed: scene.hasRolled ? _openScorePanel : null,
-      ),
-    );
   }
 }
 

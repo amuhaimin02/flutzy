@@ -30,7 +30,7 @@ class _DicePoolViewState extends State<DicePoolView>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: standardFadeDuration,
+      duration: Duration(milliseconds: 500),
       vsync: this,
     );
   }
@@ -119,15 +119,8 @@ class EmptyDicePoolPlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: (diceFaceSize + 16) * 2,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Start by rolling the dice'),
-          SizedBox(height: 16),
-          Icon(MdiIcons.diceMultipleOutline,
-              size: diceFaceSize, color: Theme.of(context).primaryColor),
-        ],
-      ),
+      child: Icon(MdiIcons.diceMultipleOutline,
+          size: diceFaceSize, color: Theme.of(context).primaryColor),
     );
   }
 }
