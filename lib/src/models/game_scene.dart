@@ -22,9 +22,14 @@ class GameScene with ChangeNotifier {
   int get tries => _tries;
 
   /// Total score of the current session
-  int _totalScore = 0;
+  int _upperBoundScore = 0;
 
-  int get totalScore => _totalScore;
+  int get upperBoundScore => _upperBoundScore;
+  int _lowerBoundScore = 0;
+
+  int get lowerBoundScore => _lowerBoundScore;
+
+  int get totalScore => _upperBoundScore + _lowerBoundScore;
 
   bool get hasRolled => tries > 0;
 
@@ -36,11 +41,20 @@ class GameScene with ChangeNotifier {
     notifyListeners();
   }
 
+  void toggleHold(int index) {
+    dicePool.toggleHold(index);
+    notifyListeners();
+  }
+
   // TODO: Return some value e.g. status
   void scoreIn(ScoreType type) {
     final score = type.score(dicePool.content);
     moveList.add(Move(type, score));
-    _totalScore += score;
+    if (upperBoundScores.contains(type)) {
+      _upperBoundScore += score;
+    } else {
+      _lowerBoundScore += score;
+    }
     _turnEnded = true;
     notifyListeners();
   }
@@ -56,7 +70,8 @@ class GameScene with ChangeNotifier {
   void restart() {
     _round = 1;
     _tries = 0;
-    _totalScore = 0;
+    _upperBoundScore = 0;
+    _lowerBoundScore = 0;
     dicePool.clear();
     moveList.clear();
     notifyListeners();

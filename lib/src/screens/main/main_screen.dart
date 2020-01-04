@@ -14,10 +14,10 @@ class FlutzyMainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => GameScene(),
-      child: OrientationBuilder(
-        builder: (context, orientation) => orientation == Orientation.portrait
-            ? FlutzyMobileScreen()
-            : FlutzyWebScreen(),
+      child: LayoutBuilder(
+        builder: (context, constraints) => constraints.maxWidth > 800
+            ? FlutzyWebScreen()
+            : FlutzyMobileScreen(),
       ),
     );
   }
@@ -67,8 +67,13 @@ class _FlutzyMobileScreenState extends State<FlutzyMobileScreen> {
           child: SwipeDetector(
             onSwipeUp: _openScorePanel,
             onSwipeDown: () {},
-            child: FlutzyPlayTable(
-              onScoreInPressed: _openScorePanel,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FlutzyPlayTable(),
+                SizedBox(height: 8),
+                _scoreInButton(context),
+              ],
             ),
           ),
         ),
@@ -122,6 +127,18 @@ class _FlutzyMobileScreenState extends State<FlutzyMobileScreen> {
   void _closeScorePanel() {
     _panel.close();
   }
+
+  _scoreInButton(BuildContext context) {
+    final scene = Provider.of<GameScene>(context);
+    return AnimatedOpacity(
+      opacity: scene.hasRolled ? 1 : 0,
+      duration: fastFadeDuration,
+      child: FlatButton(
+        child: Text('Score in'),
+        onPressed: scene.hasRolled ? _openScorePanel : null,
+      ),
+    );
+  }
 }
 
 class FlutzyWebScreen extends StatelessWidget {
@@ -143,8 +160,8 @@ class FlutzyWebScreen extends StatelessWidget {
           ),
           Card(
             child: Container(
-              // TODO: If possible I don't want to do this
-              width: 480,
+              // TODO: If possible I don't want to hard code the value like this
+              width: 420,
               height: scoreIndicatorHeight + 7 * (scoreTileHeight + 1) + 56,
               child: FlutzyScoreBoard(),
             ),

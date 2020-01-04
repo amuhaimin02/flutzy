@@ -68,7 +68,7 @@ class ScorePanelList extends StatelessWidget {
 
   Widget _bonusSectionTile(BuildContext context) {
     return SectionBonusTile(
-      currentScore: scene.totalScore,
+      currentScore: scene.upperBoundScore,
       maxScore: 63,
     );
   }

@@ -14,6 +14,10 @@ class DicePool {
 
   List<Dice> get content => _content;
 
+  List<bool> _diceOnHold;
+
+  List<bool> get diceOnHold => _diceOnHold;
+
   static final emptyDicePool = List<Dice>(5);
 
   DicePool({@required this.size}) {
@@ -23,11 +27,17 @@ class DicePool {
   List<Dice> roll() {
     return _content = List.unmodifiable(List.generate(
       size,
-      (_) => Dice.values[_random.nextInt(6)],
+      (i) => _diceOnHold[i] ? _content[i] : Dice.values[_random.nextInt(6)],
     ));
+  }
+
+  bool toggleHold(int index) {
+    assert(index >= 0 && index < size);
+    return _diceOnHold[index] = !_diceOnHold[index];
   }
 
   void clear() {
     _content = emptyDicePool;
+    _diceOnHold = List.filled(size, false);
   }
 }
