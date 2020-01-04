@@ -62,7 +62,7 @@ class ScorePanelList extends StatelessWidget {
       enabled: move == null,
       score: move?.score,
       hintScore: hasRolled ? type.score(scene.dicePool.content) : null,
-      onTap: () => _onTileSelected(type),
+      onTap: onTap != null ? () => _onTileSelected(type) : null,
     );
   }
 

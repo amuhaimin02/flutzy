@@ -52,30 +52,36 @@ class _FlutzyScoreBoardState extends State<FlutzyScoreBoard> {
     final scene = Provider.of<GameScene>(context);
     return ScorePanelList(
       scene: scene,
-      onTap: (type) => _onScoreSelected(context, type),
+      onTap: scene.hasRolled ? (type) => _onScoreSelected(context, type) : null,
     );
   }
 
   Widget _confirmButtonBar(BuildContext context) {
-    return InkWell(
-      onTap: () {},
-      child: Container(
-        height: 56,
-        width: double.infinity,
-        color: Colors.black12,
-        alignment: Alignment.center,
-        child: Text('Confirm'),
-      ),
+    final scene = Provider.of<GameScene>(context, listen: false);
+    final hasRolled = scene.hasRolled;
+    return Container(
+      height: 56,
+      width: double.infinity,
+      color: hasRolled ? Colors.black12 : Colors.red[600],
+      alignment: Alignment.center,
+      child: hasRolled
+          ? Text('Choose a score to end your turn')
+          : Text(
+              'You must roll first before scoring in',
+              style: TextStyle(color: Colors.white),
+            ),
     );
   }
 
   void _onScoreSelected(BuildContext context, ScoreType type) async {
     final scene = Provider.of<GameScene>(context, listen: false);
-    HapticFeedback.mediumImpact();
-    scene.scoreIn(type);
-    await Future.delayed(autoSlideDownDuration);
-    widget.onDonePick?.call();
-    await Future.delayed(standardFadeDuration);
-    scene.nextTurn();
+    if (scene.hasRolled) {
+      HapticFeedback.mediumImpact();
+      scene.scoreIn(type);
+      await Future.delayed(autoSlideDownDuration);
+      widget.onDonePick?.call();
+      await Future.delayed(standardFadeDuration);
+      scene.nextTurn();
+    }
   }
 }

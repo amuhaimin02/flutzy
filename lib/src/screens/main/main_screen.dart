@@ -89,20 +89,24 @@ class _FlutzyMobileScreenState extends State<FlutzyMobileScreen> {
   }
 
   Widget _appBar(BuildContext context) {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      iconTheme: IconThemeData(
-        color: Colors.black87,
-      ),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.delete),
-          onPressed: () {
-            Provider.of<GameScene>(context, listen: false).restart();
-          },
+    return PreferredSize(
+      preferredSize: Size.fromHeight(72),
+      child: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: IconThemeData(
+          color: Colors.black54,
         ),
-      ],
+        actions: [
+          IconButton(
+            tooltip: 'Restart',
+            icon: Icon(Icons.refresh),
+            onPressed: () {
+              Provider.of<GameScene>(context, listen: false).restart();
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -167,7 +171,7 @@ class FlutzyWebScreen extends StatelessWidget {
       backgroundColor: Colors.transparent,
       elevation: 0,
       iconTheme: IconThemeData(
-        color: Colors.black87,
+        color: Colors.black54,
       ),
       actions: [
         IconButton(
