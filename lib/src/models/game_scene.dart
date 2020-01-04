@@ -25,11 +25,14 @@ class GameScene with ChangeNotifier {
   int _upperBoundScore = 0;
 
   int get upperBoundScore => _upperBoundScore;
+
   int _lowerBoundScore = 0;
 
   int get lowerBoundScore => _lowerBoundScore;
 
-  int get totalScore => _upperBoundScore + _lowerBoundScore;
+  int get sectionBonus => _upperBoundScore >= 63 ? 35 : 0;
+
+  int get totalScore => upperBoundScore + lowerBoundScore + sectionBonus;
 
   bool get hasRolled => tries > 0;
 

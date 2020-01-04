@@ -89,7 +89,7 @@ class TotalScoreIndicator extends StatelessWidget {
           SizedBox(height: 4),
           TickingNumber(
             420,
-            duration: tickingNumberDuration,
+            duration: slowFadeDuration,
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w700,

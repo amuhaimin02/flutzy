@@ -128,7 +128,7 @@ class _FlutzyMobileScreenState extends State<FlutzyMobileScreen> {
     _panel.close();
   }
 
-  _scoreInButton(BuildContext context) {
+  Widget _scoreInButton(BuildContext context) {
     final scene = Provider.of<GameScene>(context);
     return AnimatedOpacity(
       opacity: scene.hasRolled ? 1 : 0,

@@ -34,6 +34,8 @@ class FlutzyPlayTable extends StatelessWidget {
   Widget _buildRollButton(BuildContext context) {
     final scene = Provider.of<GameScene>(context);
     return RaisedButton.icon(
+      highlightColor: Colors.white30,
+      splashColor: Colors.white54,
       icon: Icon(MdiIcons.diceMultipleOutline),
       label: Text('Roll (${scene.tries}/${scene.maxTries})'),
       onPressed: scene.canRoll ? () => scene.roll() : null,

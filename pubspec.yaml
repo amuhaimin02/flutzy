@@ -12,10 +12,12 @@ dependencies:
   sliding_up_panel: ^0.3.6
   material_design_icons_flutter: ^3.4.4795
   provider: ^4.0.1
-  
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.7.4
+
 
 flutter:
   uses-material-design: true
@@ -24,3 +26,10 @@ flutter:
     - family: RobotoCondensed
       fonts:
         - asset: assets/RobotoCondensed-Regular.ttf
+
+flutter_icons:
+  android: "ic_launcher"
+  ios: true
+  image_path: "icons/icon.png"
+  adaptive_icon_background: "icons/icon_bg.png"
+  adaptive_icon_foreground: "icons/icon_fg.png"
