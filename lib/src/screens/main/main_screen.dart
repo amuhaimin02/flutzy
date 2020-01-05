@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutzy/src/models/game_scene.dart';
 import 'package:flutzy/src/utils/constants.dart';
+import 'package:flutzy/src/utils/services.dart';
 import 'package:flutzy/src/widgets/swipe_detector.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -39,6 +40,7 @@ class _FlutzyMobileScreenState extends State<FlutzyMobileScreen> {
   void initState() {
     super.initState();
     isMobile = true;
+    audioPlayer.load('dice-throw.wav');
   }
 
   @override

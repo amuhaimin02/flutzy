@@ -12,6 +12,7 @@ dependencies:
   sliding_up_panel: ^0.3.6
   material_design_icons_flutter: ^3.4.4795
   provider: ^4.0.1
+  audioplayers: ^0.13.6
 
 dev_dependencies:
   flutter_test:

@@ -3,25 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:flutzy/src/models/game_scene.dart';
 import 'package:flutzy/src/screens/main/main_screen.dart';
 import 'package:flutzy/src/utils/constants.dart';
+import 'package:flutzy/src/utils/services.dart';
 import 'package:flutzy/src/widgets/blinking.dart';
 import 'package:flutzy/src/widgets/dice_pool_view.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
-class FlutzyPlayTable extends StatelessWidget {
+class FlutzyPlayTable extends StatefulWidget {
   const FlutzyPlayTable({Key key}) : super(key: key);
 
   @override
+  _FlutzyPlayTableState createState() => _FlutzyPlayTableState();
+}
+
+class _FlutzyPlayTableState extends State<FlutzyPlayTable> {
+  @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Stack(
-        children: [
-          Center(
-            child: _playTableContent(context),
-          ),
-          if (isMobile) _swipeUpIndicatorMobile(context),
-        ],
-      ),
+    return Stack(
+      children: [
+        Center(
+          child: _playTableContent(context),
+        ),
+        if (isMobile) _swipeUpIndicatorMobile(context),
+      ],
     );
   }
 
@@ -62,8 +66,13 @@ class FlutzyPlayTable extends StatelessWidget {
       icon: Icon(MdiIcons.diceMultipleOutline),
       label: scene.tries != 0
           ? Text('Roll again (${scene.maxTries - scene.tries} left)')
-          : Text('Roll now!'),
-      onPressed: scene.canRoll ? () => scene.roll() : null,
+          : Text('Roll now'),
+      onPressed: scene.canRoll
+          ? () {
+              scene.roll();
+              audioPlayer.play('dice-throw.wav');
+            }
+          : null,
     );
   }
 
@@ -134,10 +143,13 @@ class GuideMessage extends StatelessWidget {
   Widget _guideContent(BuildContext context) {
     final scene = Provider.of<GameScene>(context, listen: false);
     if (scene.tries == 0) {
-      return Text(
-        'Round ${scene.round}\n'
-        'Start by rolling the dice',
-        textAlign: TextAlign.center,
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Round ${scene.round}. ',
+              style: TextStyle(fontStyle: FontStyle.italic)),
+          Text('Start rolling!'),
+        ],
       );
     } else if (scene.canRoll) {
       return Text(
