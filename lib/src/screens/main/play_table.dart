@@ -25,18 +25,23 @@ class FlutzyPlayTable extends StatelessWidget {
     );
   }
 
-  Column _playTableContent(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _guideMessage(context),
-        SizedBox(height: 16),
-        _diceDisplay(context),
-        SizedBox(height: 32),
-        _buildRollButton(context),
-        SizedBox(height: 64),
-      ],
-    );
+  Widget _playTableContent(BuildContext context) {
+    final scene = Provider.of<GameScene>(context, listen: false);
+    if (scene.isStillInGame) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _guideMessage(context),
+            _diceDisplay(context),
+            _buildRollButton(context),
+          ],
+        ),
+      );
+    } else {
+      return _endingScreen(context);
+    }
   }
 
   Widget _diceDisplay(BuildContext context) {
@@ -90,6 +95,25 @@ class FlutzyPlayTable extends StatelessWidget {
     } else {
       return SizedBox();
     }
+  }
+
+  Widget _endingScreen(BuildContext context) {
+    final scene = Provider.of<GameScene>(context, listen: false);
+    final textTheme = Theme.of(context).textTheme;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text('Your total score'),
+        Text('${scene.totalScore}',
+            style: textTheme.headline.copyWith(fontWeight: FontWeight.bold)),
+        SizedBox(height: 16),
+        Text('Number of Flutzies'),
+        Text('${scene.allStreak}', style: textTheme.headline),
+        SizedBox(height: 16),
+        Text('High score'),
+        Text('420', style: textTheme.headline),
+      ],
+    );
   }
 }
 

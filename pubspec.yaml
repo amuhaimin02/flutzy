@@ -26,6 +26,9 @@ flutter:
     - family: RobotoCondensed
       fonts:
         - asset: assets/RobotoCondensed-Regular.ttf
+  assets:
+    - assets/
+
 
 flutter_icons:
   android: "ic_launcher"

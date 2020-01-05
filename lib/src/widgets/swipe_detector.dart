@@ -30,9 +30,11 @@ class _SwipeDetectorState extends State<SwipeDetector> {
       },
       onVerticalDragEnd: (endDetails) {
         double dx = updateVerticalDragDetails.globalPosition.dx -
-            startVerticalDragDetails.globalPosition.dx;
+                startVerticalDragDetails.globalPosition?.dx ??
+            0;
         double dy = updateVerticalDragDetails.globalPosition.dy -
-            startVerticalDragDetails.globalPosition.dy;
+                startVerticalDragDetails.globalPosition?.dy ??
+            0;
         double velocity = endDetails.primaryVelocity;
 
         //Convert values to be positive

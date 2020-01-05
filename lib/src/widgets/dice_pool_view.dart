@@ -60,7 +60,7 @@ class _DicePoolViewState extends State<DicePoolView>
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      duration: standardFadeDuration,
+      duration: fastFadeDuration,
       child: widget.pool.content != DicePool.emptyDicePool
           ? _dicePoolContent()
           : EmptyDicePoolPlaceholder(),

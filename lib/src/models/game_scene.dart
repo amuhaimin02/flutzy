@@ -17,6 +17,8 @@ class GameScene with ChangeNotifier {
 
   int get round => _round;
 
+  bool get isStillInGame => round <= 13;
+
   int _tries = 0;
 
   int get tries => _tries;

@@ -58,7 +58,7 @@ class _FlutzyMobileScreenState extends State<FlutzyMobileScreen> {
   }
 
   Widget _screenScaffold() {
-    final statusBarHeight = MediaQuery.of(context).padding.top;
+//    final statusBarHeight = MediaQuery.of(context).padding.top;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: _appBar(context),
@@ -71,7 +71,6 @@ class _FlutzyMobileScreenState extends State<FlutzyMobileScreen> {
         maxHeight: scoreIndicatorHeight + 7 * (scoreTileHeight + 1) + 56,
         body: Container(
           padding: EdgeInsets.only(
-            top: statusBarHeight,
             bottom: scoreIndicatorHeight,
           ),
           child: SwipeDetector(
