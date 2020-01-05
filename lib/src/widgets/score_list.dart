@@ -57,10 +57,15 @@ class ScorePanelList extends StatelessWidget {
     final move = scene.moveList
         .firstWhere((move) => move.type == type, orElse: () => null);
 
+    var score = move?.score;
+    if (score != null && type == ScoreType.fiveOfAKind) {
+      score += scene.allStreakBonus;
+    }
+
     return ScorePanelTile(
       type: type,
       enabled: move == null,
-      score: move?.score,
+      score: score,
       hintScore: hasRolled ? type.score(scene.dicePool.content) : null,
       onTap: onTap != null ? () => _onTileSelected(type) : null,
     );

@@ -25,10 +25,13 @@ class DicePool {
   }
 
   List<Dice> roll() {
-    return _content = List.unmodifiable(List.generate(
-      size,
-      (i) => _diceOnHold[i] ? _content[i] : Dice.values[_random.nextInt(6)],
-    ));
+//    return _content = List.unmodifiable(List.generate(
+//      size,
+//      (i) => _diceOnHold[i] ? _content[i] : Dice.values[_random.nextInt(6)],
+//    ));
+    return _content = _random.nextBool()
+        ? [Dice.five, Dice.five, Dice.five, Dice.five, Dice.five]
+        : [Dice.one, Dice.two, Dice.three, Dice.five, Dice.six];
   }
 
   bool toggleHold(int index) {

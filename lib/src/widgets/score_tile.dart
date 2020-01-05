@@ -113,7 +113,7 @@ final scorePanelDataOf = {
   ScoreType.largeStraight: ScorePanelData(
       name: 'Large straight', icon: MdiIcons.arrowRightCircleOutline),
   ScoreType.fiveOfAKind:
-      ScorePanelData(name: '5 of a kind', icon: MdiIcons.numeric5CircleOutline),
+      ScorePanelData(name: 'Flutzy', icon: MdiIcons.numeric5CircleOutline),
   ScoreType.chance:
       ScorePanelData(name: 'Chance', icon: MdiIcons.helpCircleOutline),
 };

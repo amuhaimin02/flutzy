@@ -73,15 +73,20 @@ class _FlutzyScoreBoardState extends State<FlutzyScoreBoard> {
     );
   }
 
+  // Static variable to prevent two simultaenous touch
+  static bool _lock = false;
+
   void _onScoreSelected(BuildContext context, ScoreType type) async {
     final scene = Provider.of<GameScene>(context, listen: false);
-    if (scene.hasRolled) {
+    if (scene.hasRolled && !_lock) {
+      _lock = true;
       HapticFeedback.mediumImpact();
       scene.scoreIn(type);
       await Future.delayed(autoSlideDownDuration);
       widget.onDonePick?.call();
       await Future.delayed(standardFadeDuration);
       scene.nextTurn();
+      _lock = false;
     }
   }
 }

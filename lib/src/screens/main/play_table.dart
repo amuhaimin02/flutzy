@@ -19,7 +19,7 @@ class FlutzyPlayTable extends StatelessWidget {
           Center(
             child: _playTableContent(context),
           ),
-          _swipeUpIndicatorMobile(context),
+          if (isMobile) _swipeUpIndicatorMobile(context),
         ],
       ),
     );
