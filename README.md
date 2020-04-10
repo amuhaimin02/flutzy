@@ -16,4 +16,8 @@ A dice game based on Yahtzee/Yatzy, built with Flutter.
 
 ---
 
-To be added later.
+## How to play
+
+The gameplay and rules are quite similar to original [Yahtzee](https://en.wikipedia.org/wiki/Yahtzee), although not all rules are fully implemented yet.
+
+More to be added later.
