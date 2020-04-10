@@ -112,7 +112,7 @@ class _FlutzyMobileScreenState extends State<FlutzyMobileScreen> {
   }
 
   Future<bool> _onBackPress() async {
-    if (_panel.isPanelOpen()) {
+    if (_panel.isPanelOpen) {
       _panel.close();
       return false;
     } else {
@@ -121,7 +121,7 @@ class _FlutzyMobileScreenState extends State<FlutzyMobileScreen> {
   }
 
   void _togglePanelSliding() {
-    if (_panel.isPanelOpen()) {
+    if (_panel.isPanelOpen) {
       _panel.close();
     } else {
       _panel.open();
